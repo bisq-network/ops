@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+mempools=()
+mempools+=node100.bitcoin.wiz.biz
+mempools+=node210.bitcoin.wiz.biz
+mempools+=node220.bitcoin.wiz.biz
+mempools+=mempool.space
+mempools+=mempool.ninja
+mempools+=mempool.emzy.de
+
+pricenodes=()
+pricenodes+=xc3nh4juf2hshy7e.onion # emzy
+pricenodes+=ceaanhbvluug4we6.onion # mrosseel
+pricenodes+=44mgyoe2b6oqiytt.onion # devinbileck
+pricenodes+=62nvujg5iou3vu3i.onion # alexej996
+pricenodes+=wizpriceje6q5tdrxkyiazsgu7irquiqjy2dptezqhrtu7l2qelqktid.onion # wiz
+pricenodes+=emzypricpidesmyqg2hc6dkwitqzaxrqnpkdg3ae2wef5znncu2ambqd.onion # emzy
+pricenodes+=aprcndeiwdrkbf4fq7iozxbd27dl72oeo76n7zmjwdi4z34agdrnheyd.onion # mrosseel
+pricenodes+=devinpndvdwll4wiqcyq5e7itezmarg7rzicrvf6brzkwxdm374kmmyd.onion # devin
+pricenodes+=ro7nv73awqs3ga2qtqeqawrjpbxwarsazznszvr6whv7tes5ehffopid.onion # alexej996
+
+echo -n "💰Bisq Pricenode Mempool Fees as of "
+date
+echo '```'
+
+for i in $mempools
+do
+	echo -n "$i -> "
+	fee=$(torsocks curl -s https://$i/api/v1/fees/recommended|jq .halfHourFee)
+	echo -n "$fee sats/vByte"
+	echo
+done
+
+for i in $pricenodes
+do
+	echo -n "$i -> "
+	fee=$(torsocks curl -s http://$i/getFees | jq .dataMap.btcTxFee)
+	echo -n "$fee sats/vByte"
+	echo
+done
+echo '```'

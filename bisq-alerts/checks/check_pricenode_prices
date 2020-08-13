@@ -1,0 +1,49 @@
+#!/usr/bin/env zsh
+mempools=()
+mempools+=mempool.space #node100.hnl.wiz.biz
+mempools+=node210.fmt.wiz.biz
+mempools+=node220.fmt.wiz.biz
+mempools+=mempool.emzy.de
+
+pricenodes=()
+pricenodes+=xc3nh4juf2hshy7e.onion # emzy
+pricenodes+=ceaanhbvluug4we6.onion # mrosseel
+pricenodes+=44mgyoe2b6oqiytt.onion # devinbileck
+pricenodes+=62nvujg5iou3vu3i.onion # alexej996
+pricenodes+=wizpriceje6q5tdrxkyiazsgu7irquiqjy2dptezqhrtu7l2qelqktid.onion # wiz
+pricenodes+=emzypricpidesmyqg2hc6dkwitqzaxrqnpkdg3ae2wef5znncu2ambqd.onion # emzy
+pricenodes+=aprcndeiwdrkbf4fq7iozxbd27dl72oeo76n7zmjwdi4z34agdrnheyd.onion # mrosseel
+pricenodes+=devinpndvdwll4wiqcyq5e7itezmarg7rzicrvf6brzkwxdm374kmmyd.onion # devin
+pricenodes+=ro7nv73awqs3ga2qtqeqawrjpbxwarsazznszvr6whv7tes5ehffopid.onion # alexej996
+
+currencies=()
+currencies+=USD
+currencies+=EUR
+currencies+=GBP
+currencies+=BRL
+currencies+=CAD
+currencies+=AUD
+currencies+=JPY
+currencies+=SEK
+currencies+=XMR
+
+echo -n "💰Bisq Pricenode Price Check on "
+date
+
+for j in $currencies
+do
+	echo "BTC/$j: "
+echo '```'
+	for i in $pricenodes
+	do
+		onion=$(echo $i | sed -e 's/.onion//')
+		price=$(torsocks curl -s http://$i/getAllMarketPrices|jq -c '.data | .[] | { currency:.currencyCode,price:.price } ' | grep $j | cut -d : -f3 | cut -d '}' -f1)
+		pricecut=$(echo $price| cut -d . -f1 | head -1)
+		if [ $j = XMR ];then
+			echo "${onion} ${price} $j"
+		else
+			echo "${onion} ${pricecut} $j"
+		fi
+	done
+echo '```'
+done

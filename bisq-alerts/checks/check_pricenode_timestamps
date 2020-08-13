@@ -1,0 +1,26 @@
+#!/usr/bin/env zsh
+mempools=()
+mempools+=mempool.space #node100.hnl.wiz.biz
+mempools+=node210.fmt.wiz.biz
+mempools+=node220.fmt.wiz.biz
+mempools+=mempool.emzy.de
+
+pricenodes=()
+pricenodes+=xc3nh4juf2hshy7e.onion # emzy
+pricenodes+=ceaanhbvluug4we6.onion # mrosseel
+pricenodes+=44mgyoe2b6oqiytt.onion # devinbileck
+pricenodes+=62nvujg5iou3vu3i.onion # alexej996
+
+echo -n "💰Bisq Pricenode Timestamp Check on "
+date
+
+echo '```'
+for i in $pricenodes
+do
+	echo -n "$i - last updated: "
+	ts=$(torsocks curl -s http://$i/getAllMarketPrices|grep btcAverageTs|cut -d : -f2|cut -d , -f1)
+	#echo $ts
+	date -d "@$(($ts / 1000))"
+done
+
+echo '```'
